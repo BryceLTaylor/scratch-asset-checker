@@ -1,33 +1,45 @@
 // This project will check all of the assets in a project and see if they exist in the assets server
-var fs = require('fs'); // a file io library we think
-var axios = require('axios'); // library to make http requests
+const fs = require('fs'); // a file io library we think
+const axios = require('axios'); // library to make http requests
 
 //Ask for a project id or allow user to upload a project.json file
 //pull the project.json down for the project id
 const projectID = process.env.ID || 0;
-const projectFilePath = process.env.filepath || "";
+// const projectFilePath = process.env.filepath || "";
 
 // load the json of the project from a project json file into an object.
-const getJSON = function() {
-    let file = fs.readFileSync(projectFilePath, {'encoding':'utf8'});
-    let projectJSON = JSON.parse(file);
-    // console.log(projectJSON);
-    return projectJSON;
+const getJSON = async function() {
+        let tempURI = await `https://projects.scratch.mit.edu/${projectID}`;
+        try {
+            let response = await axios.get(tempURI);
+            console.log("we got it")
+            console.log(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+        // return new Promise.resolve(JSON.parse(response.data));
+        // return proj;
+        try{
+            let proj = await parseJsonAsync(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+        await console.log(proj);
+        return proj;
 }
 
-const getJSONFile = function(){
-    let file = fs.readFileSync(projectFilePath, {'encoding':'utf8'});
-
+const parseJsonAsync = (jsonString) => {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve(JSON.parse(jsonString))
+        })
+    })
 }
 
-const getJSONServer = async function(){
-    let tempURI = `https://projects.scratch.mit.edu/${projectID}`;
-    let response = await axios.get(tempURI);
-    let file = await response.data;
-    return file;
-}
+// const getJSONServer = async function(){
+//}
 
-getJSONServer();
+// getJSONServer();
 
 // console.log(project.targets[0]);
 
@@ -60,7 +72,7 @@ const findAssets = function(proj) {
 // let assets = findAssets();
 
 // use https to request each asset from assets.scratch.mit.edu/[md5ext]
-let addResponses = async function(assetList) {
+const addResponses = async function(assetList) {
     for (i=0; i<assetList.length; i++){
         let tempURI = `https://assets.scratch.mit.edu/${assetList[i].md5ext}`;
         var res;
@@ -78,7 +90,7 @@ let addResponses = async function(assetList) {
 };
 
 // print all of the responses to the screen
-let printAssets = function(assetList) {
+const printAssets = function(assetList) {
     let outputString = "";
     for (asset of assetList){
         values = Object.values(asset);
@@ -86,8 +98,8 @@ let printAssets = function(assetList) {
     };
 }
 
-let program = async function() {
-    let project = getJSON();
+const program = async function() {
+    let project = await getJSON();
     let assets = await findAssets(project);
     await addResponses(assets);
     await printAssets(assets);
