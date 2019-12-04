@@ -5,43 +5,20 @@ const axios = require('axios'); // library to make http requests
 //Ask for a project id or allow user to upload a project.json file
 //pull the project.json down for the project id
 const projectID = process.env.ID || 0;
-// const projectFilePath = process.env.filepath || "";
 
 // load the json of the project from a project json file into an object.
 const getJSON = async function() {
-        let tempURI = await `https://projects.scratch.mit.edu/${projectID}`;
+        let tempURI = `https://projects.scratch.mit.edu/${projectID}`;
         try {
-            let response = await axios.get(tempURI);
+            var response = await axios.get(tempURI);
             console.log("we got it")
-            console.log(response.data);
+            return JSON.parse(JSON.stringify(response.data));
+            console.log(typeof response.data);
+            // console.log(JSON.parse(response.data));
         } catch (error) {
             console.error(error);
         }
-        // return new Promise.resolve(JSON.parse(response.data));
-        // return proj;
-        try{
-            let proj = await parseJsonAsync(response.data);
-        } catch (error) {
-            console.error(error);
-        }
-        await console.log(proj);
-        return proj;
 }
-
-const parseJsonAsync = (jsonString) => {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve(JSON.parse(jsonString))
-        })
-    })
-}
-
-// const getJSONServer = async function(){
-//}
-
-// getJSONServer();
-
-// console.log(project.targets[0]);
 
 // for each sprite in the json grab, check each costume
 // also check each sound.
@@ -68,8 +45,6 @@ const findAssets = function(proj) {
     }
     return assets;
 }
-
-// let assets = findAssets();
 
 // use https to request each asset from assets.scratch.mit.edu/[md5ext]
 const addResponses = async function(assetList) {
