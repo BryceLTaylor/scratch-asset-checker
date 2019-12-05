@@ -12,4 +12,6 @@ run:
 You can check the assets of a project in the project server with just the project id.
 
 run:
-`ID=[project id] node AssetCheckerRemote.js`
+`ID=[project id] node AssetChecker.js`
+
+Note that if you give both an ID and a file path it will only check the project from the server.

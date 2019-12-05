@@ -8,28 +8,34 @@ const projectID = process.env.ID || 0;
 const projectFilePath = process.env.filepath || "";
 
 // load the json of the project from a project json file into an object.
-const getJSON = function() {
-    let file = fs.readFileSync(projectFilePath, {'encoding':'utf8'});
-    let projectJSON = JSON.parse(file);
-    // console.log(projectJSON);
+const getJSON = async function() {
+    var file;
+    var projectJSON;
+    if (projectID == 0) {
+        file = await fs.readFileSync(projectFilePath, {'encoding':'utf8'});
+        projectJSON = await JSON.parse(file);
+
+    } else {
+        projectJSON = await getJsonRemote();
+    }
     return projectJSON;
 }
 
 const getJSONFile = function(){
     let file = fs.readFileSync(projectFilePath, {'encoding':'utf8'});
-
 }
 
-const getJSONServer = async function(){
-    let tempURI = `https://projects.scratch.mit.edu/${projectID}`;
-    let response = await axios.get(tempURI);
-    let file = await response.data;
-    return file;
+const getJsonRemote = async function() {
+        let tempURI = `https://projects.scratch.mit.edu/${projectID}`;
+        try {
+            var response = await axios.get(tempURI);
+            console.log("we got it")
+            return JSON.parse(JSON.stringify(response.data));
+            console.log(typeof response.data);
+        } catch (error) {
+            console.error(error);
+        }
 }
-
-getJSONServer();
-
-// console.log(project.targets[0]);
 
 // for each sprite in the json grab, check each costume
 // also check each sound.
@@ -57,8 +63,6 @@ const findAssets = function(proj) {
     return assets;
 }
 
-// let assets = findAssets();
-
 // use https to request each asset from assets.scratch.mit.edu/[md5ext]
 let addResponses = async function(assetList) {
     for (i=0; i<assetList.length; i++){
@@ -68,10 +72,8 @@ let addResponses = async function(assetList) {
         try{
             response = await axios.get(tempURI);
             code = await response.status;
-            // await console.log(code);
         } catch (error) {
             code = await error.response.status;
-            // console.error(code);
         }
         assetList[i].responseCode = code;
     };
@@ -87,7 +89,7 @@ let printAssets = function(assetList) {
 }
 
 let program = async function() {
-    let project = getJSON();
+    let project = await getJSON();
     let assets = await findAssets(project);
     await addResponses(assets);
     await printAssets(assets);
