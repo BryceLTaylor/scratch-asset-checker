@@ -15,3 +15,6 @@ run:
 `ID=[project id] node AssetChecker.js`
 
 Note that if you give both an ID and a file path it will only check the project from the server.
+
+#### Old versions
+This does not work for sb2 or sb projects
