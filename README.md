@@ -28,7 +28,7 @@ run:
 run:
 `ID=[project id] node BlockChecker.js`
 
-Note that in both cases if you give both an ID and a file path it will only check the project from the server.
+## Notes
+This does not work for sb2 or sb projects.
 
-## Old versions
-This does not work for sb2 or sb projects
+Note that in both cases if you give both an ID and a file path it will only check the project from the server.
