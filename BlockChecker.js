@@ -42,30 +42,50 @@ const getJsonRemote = async function() {
 //Create an object for each asset that includes:
 //Sprite name, Asset name, md5ext, assset type, response code, response detail, thumbnail
 const findBlocks = function(proj) {
-    let blocks = [];
-    for (target of proj.targets){
-        let spriteName = target.name;
-        for (block of target.blocks) {
-            let newOpCode = block.opcode;
-            let foundInBlocks = false;
-            for (blockFromList of blocks) {
-                if (newOpCode == blockFromList.opcode) {
-                    foundInBlocks = true;
-                    blockFromList.sprites.spriteName++;
+    var blocks = [];
+    try {
+        for (target of proj.targets){
+            var spriteName = target.name;
+            // console.log(spriteName);
+            for (block in target.blocks) {
+                // console.log(block);
+                var newOpCode = target.blocks[block].opcode;
+                // console.log(newOpCode);
+                let foundInBlocks = false;
+                for (blockFromList of blocks) {
+                    if (newOpCode == blockFromList.opcode) {
+                        foundInBlocks = true;
+                        // if the sprite is already in the block's list then add 1
+                        // console.log(blockFromList.sprites);
+                        for (spriteInBlock of blockFromList.sprites){
+                            var foundSprite = false;
+                            // console.log(spriteName + '   ==   ' + blockFromList.sprites[spriteInBlock]);
+                            if (spriteName == spriteInBlock.sprite) {
+                                spriteInBlock.count++;
+                                foundSprite = true;
+                            }
+                        }
+                        // if the sprite is not in the block's list add it
+                        if (!foundSprite) {
+                            blockFromList.sprites.push({sprite:spriteName, count:1})
+                        }
+                    }
                 }
-            }
-            if (!foundInBlocks) {
-                let newBlock = {opcode : NewOpCode, sprites: [{spriteName:1}]};
-                blocks.push(newBlock);
-            }
+                if (!foundInBlocks) {
+                    let newBlock = {opcode : newOpCode, sprites: [{sprite:spriteName, count:1}]};
+                    blocks.push(newBlock);
+                }
 
-            // newAsset.assetName = asset.name;
-            // newAsset.md5ext = asset.md5ext;
-            // newAsset.assetType = asset.dataFormat;
-            // assets.push(newAsset);
+                // newAsset.assetName = asset.name;
+                // newAsset.md5ext = asset.md5ext;
+                // newAsset.assetType = asset.dataFormat;
+                // assets.push(newAsset);
+            }
         }
+        return blocks;
+    } catch(error) {
+        console.error(error)
     }
-    return blocks;
 }
 
 const findBlockInBlocks = function(block, blocks) {
