@@ -62,17 +62,19 @@ const findBlocks = function(proj) {
                             // console.log(spriteName + '   ==   ' + blockFromList.sprites[spriteInBlock]);
                             if (spriteName == spriteInBlock.sprite) {
                                 spriteInBlock.count++;
+                                blockFromList.totalCount++;
                                 foundSprite = true;
                             }
                         }
                         // if the sprite is not in the block's list add it
                         if (!foundSprite) {
                             blockFromList.sprites.push({sprite:spriteName, count:1})
+                            blockFromList.totalCount++;
                         }
                     }
                 }
                 if (!foundInBlocks) {
-                    let newBlock = {opcode : newOpCode, sprites: [{sprite:spriteName, count:1}]};
+                    let newBlock = {opcode : newOpCode, sprites: [{sprite:spriteName, count:1}], totalCount:1};
                     blocks.push(newBlock);
                 }
 
