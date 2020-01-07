@@ -35,7 +35,7 @@ const findAssets = function(proj) {
         let spriteName = target.name;
         // console.log(spriteName);
         for (let asset of target.costumes) {
-            let newAsset = {spritetName : spriteName};
+            let newAsset = {spriteName : spriteName};
             newAsset.assetName = asset.name;
             // console.log(asset);
             if (asset.md5ext) {
@@ -49,7 +49,7 @@ const findAssets = function(proj) {
             assets.push(newAsset);
         }
         for (let asset of target.sounds) {
-            let newAsset = {spritetName : spriteName};
+            let newAsset = {spriteName : spriteName};
             newAsset.assetName = asset.name;
             newAsset.md5ext = asset.md5ext;
             if (asset.md5ext) {
@@ -178,6 +178,8 @@ let getAssets2 = async function(project) {
         // console.log("assets: ");
         // console.log(assets);
         await addResponses(assets);
+        // console.log("assets: ");
+        // console.log(assets);
         return assets;
     } catch(error) {
         console.error(error)
