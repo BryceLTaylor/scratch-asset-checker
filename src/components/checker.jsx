@@ -3,6 +3,7 @@ import React from 'react';
 import projectChecker from '../projectChecker.js';
 import ProjectSelector from './project-selector.jsx';
 import AssetItem from './asset-item.jsx';
+import BlockItem from './block-item.jsx';
 
 class Checker extends React.Component{
     constructor(props) {
@@ -58,6 +59,13 @@ class Checker extends React.Component{
                             sprite={asset.spriteName}
                             name={asset.assetName}
                             ID={asset.md5ext}
+                        />
+                    ))
+                }</div>
+                <div>{
+                    this.state.blocks.map((block) =>(
+                        <BlockItem
+                            block={block}
                         />
                     ))
                 }</div>

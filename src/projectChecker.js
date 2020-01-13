@@ -51,9 +51,9 @@ const findAssets = function(proj) {
         for (let asset of target.sounds) {
             let newAsset = {spriteName : spriteName};
             newAsset.assetName = asset.name;
-            newAsset.md5ext = asset.md5ext;
+            // newAsset.md5ext = asset.md5ext;
             if (asset.md5ext) {
-                newAsset.md5Ext = asset.md5ext;
+                newAsset.md5ext = asset.md5ext;
             } else {
                 newAsset.md5ext = asset.assetId + '.' + asset.dataFormat;
             }
@@ -72,9 +72,16 @@ let addResponses = async function(assetList) {
         var code;
         try{
             let response = await axios.get(tempURI);
-            code = await response.status;
+            console.dir(response);
+            code = response.status;
         } catch (error) {
-            code = await error.response.status;
+            if (error.response) {
+                code = await error.response.status;
+            } else {
+                code = '0000'
+            }
+
+            console.error(error);
         }
         assetList[i].responseCode = code;
     };
@@ -173,17 +180,23 @@ let getAssets = async function(ID) {
 }
 
 let getAssets2 = async function(project) {
+    let assets = [];
     try {
-        let assets = await findAssets(project);
+        assets = await findAssets(project);
         // console.log("assets: ");
         // console.log(assets);
-        await addResponses(assets);
-        // console.log("assets: ");
-        // console.log(assets);
-        return assets;
+
     } catch(error) {
-        console.error(error)
+        console.error(error);
     }
+    try {
+        await addResponses(assets);
+    }catch (error) {
+        console.error(error);
+    }
+    // console.log("assets: ");
+    // console.log(assets);
+    return assets;
 }
 
 let getBlocks = async function(ID) {
