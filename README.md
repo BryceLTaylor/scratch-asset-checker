@@ -10,7 +10,7 @@ It also checks each block in the project.json and counts each block.  It keeps t
 Run `npm start` in the terminal to launch a local server.
 Navigate to `localhost:3000` and enter a project ID in the given field.
 
-Currently the output comes in the form of a console statements.  A proper report on the page will come soon.
+Currently the output comes in a giant list.  Sometime soon a more manageable list will be added.
 
 ## To run in a terminal
 
