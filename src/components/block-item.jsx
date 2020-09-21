@@ -1,9 +1,10 @@
 import React from 'react';
+import styles from './block-item.css';
 
 const BlockItem = props =>  (
     <div>
-        <span>{'block: ' + props.block.opcode}</span>
-        <span>{'total count: ' + props.block.totalCount}</span>
+        <span className="block-name">{'block: ' + props.block.opcode}</span>
+        <span>{'  total count: ' + props.block.totalCount}</span>
         <div>
             {props.block.sprites.map(
                 (sprite) => (
